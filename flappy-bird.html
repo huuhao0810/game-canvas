@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id='my-canvas' width="900" height="504"></canvas>
+
+    <script>
+        const canvas = document.getElementById('my-canvas');
+        const context = canvas.getContext('2d');
+
+        const bg = new Image();
+        const pipeSouth = new Image();    
+        const pipeNorth = new Image();
+        const bird = new Image();
+        bg.src ='images/bg.png';
+        pipeSouth.src ='images/pipeSouth.png';
+        pipeNorth.src ='images/pipeNorth.png';
+        bird.src ='images/bird.png';
+        const gap = 75;
+        let posX = 100;
+        let posY = 250;
+        let gravity = 1.5;
+        function Component (x, y, w, h, color){
+            this.x = x;
+            this.y = y;
+            this.width = w;
+            this.height = h;
+            this.color = color;
+        }
+        
+        Component.prototype.draw = function(){
+            context.fillStyle= this.color;
+            context.fillRect(this.x, this.y, this.width, this.height);        
+            
+        };
+       
+        function clearR (){
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+        }
+        
+        canvas.addEventListener('click',handleClick);
+        function handleClick(){
+            posY -= 25;
+        }
+        window.addEventListener('keydown',handleEvent);
+        function handleEvent(e){
+            console.log('e :', e);
+            if (e.keyCode === 32 ){
+                posY -= 25;
+            }
+        }
+        let obs = [];
+        let pipe = [{
+            x: canvas.width,
+            y:0
+        }];
+        // let randomHeight = Math.floor(Math.random()*(canvas.height-gap)/2);
+        function time (k,n){
+            if (k/n %1 ===0){
+                return true;
+            }else return false;
+        }
+       let k = 0;
+        function update(){
+            // clearR();
+            k++
+            let randomHeight = Math.floor(Math.random()*(canvas.height-gap)/2);
+            console.log('randomHeight :', randomHeight);           
+            context.drawImage(bg, 0, 0);            
+            const piece = new Component(posX, posY, 20, 20, 'red');
+            posY+= gravity;
+            piece.draw();
+            if (time(k,180)){
+            const obstacleNorth = new Component(pipe[0].x, pipe[0].y, 50, 20+randomHeight, 'green');
+            const obstacleSouth = new Component(pipe[0].x, gap+obstacleNorth.height, 50, canvas.height-gap-obstacleNorth.height, 'green');
+            obs.push(obstacleNorth);
+            obs.push(obstacleSouth);
+            }            
+            
+            for (let i = 0; i<obs.length; i++){
+                obs[i].draw();
+                obs[i].x --;
+            }
+            requestAnimationFrame(update);
+            
+        }        
+        update();
+        
+
+    
+    </script>
+</body>
+</html>

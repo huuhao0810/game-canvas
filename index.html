@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px solid gray;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id='my-canvas'></canvas>
+
+
+    <script>
+        const canvas = document.getElementById('my-canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = 500;
+        canvas.height = 300;
+
+      
+
+        
+        
+        // const [cW, cH, defaultWidth, defaultHeight] = [canvas.width, canvas.height, 20, 20];
+        // let speed = 20;
+        // let speedCreateObstacle = 150;
+        // let obstacles = [];
+        // const bird = new Component(20, cH - 20, 20, 20, 'red');
+
+        // const game = {
+        //     interval: setInterval(updateGame, speed),
+        //     clearRect: function () {
+        //         context.clearRect(0, 0, cW, cH);
+        //     },
+        //     time: 0
+        // }
+        // console.log('game :', game);
+
+         function Component(coodrX, coodrY, width, height, color) {
+            this.coodrX = coodrX;
+            this.coodrY = coodrY;
+            this.width = width;
+            this.height = height;
+            this.color = color;
+            this.draw = function () {
+                context.fillStyle = this.color;
+                context.fillRect(this.coodrX, this.coodrY, this.width, this.height);
+            };           
+        };
+
+        const piece = new Component (50, 50, 20, 20, 'red');
+        const obstacle1 = new Component (200, 100, 20, 200, 'green');
+        const obstacle2 = new Component (300, 150, 20, 150, 'blue');
+        const obstacle3 = new Component (400, 200, 20, 100, 'orange');
+        piece.draw();
+        obstacle1.draw();
+        obstacle2.draw();
+        obstacle3.draw();
+        // function Component(coodrX, coodrY, width, height, color, type) {
+        //     this.coodrX = coodrX;
+        //     this.coodrY = coodrY;
+        //     this.width = width;
+        //     this.height = height;
+        //     this.color = color;
+        //     this.type = type;
+        //     this.speedX = 0;
+        //     this.speedY = 0;
+        //     this.gravity = 0;
+        //     this.gravitySpeed = 0;
+        //     this.draw = function () {
+        //         if (this.type == 'text') {
+        //             context.font = `${this.height}px sans-serif`;
+        //             context.fillStyle = this.color;
+        //             context.fillText(this.text, this.coodrX, this.coodrY, this.width);
+
+        //         } else {
+        //             context.fillStyle = this.color;
+        //             context.fillRect(this.coodrX, this.coodrY, this.width, this.height);
+
+        //         }
+
+        //     };
+        //     this.newPosition = function () {
+        //         this.coodrX += this.speedX;
+        //         this.coodrY += this.speedY + this.gravitySpeed;
+        //         this.bottom();
+        //         this.top();
+
+        //     };
+        //     this.bottom = function () {
+        //         let aspaceY = cH - this.height;
+        //         if (this.coodrY > aspaceY) {
+        //             this.coodrY = aspaceY;
+        //             this.gravitySpeed = 0;
+        //         }
+        //     };
+        //     this.top = function () {
+        //         if (this.coodrY < 0) {
+        //             this.coodrY = 0;
+        //         }
+
+        //     };
+
+        //     this.crashWith = function (otherobj) {
+        //         var myleft = this.coodrX;
+        //         var myright = this.coodrX + (this.width);
+        //         var mytop = this.coodrY;
+        //         console.log('mytop :', mytop);
+        //         var mybottom = this.coodrY + (this.height);
+        //         console.log('mybottom :', mybottom);
+        //         var otherleft = otherobj.coodrX;
+        //         var otherright = otherobj.coodrX + (otherobj.width);
+        //         var othertop = otherobj.coodrY;
+        //         console.log('othertop :', othertop);
+        //         var otherbottom = otherobj.coodrY + (otherobj.height);
+        //         var crash = true;
+        //         if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+        //             crash = false;
+        //         }
+        //         return crash;
+        //     }
+
+
+
+        // }
+
+
+
+        // function handleClick() {
+        //     bird.gravitySpeed = 3;
+        //     // console.log('bird :', bird);
+        //     // console.log('object1');
+        //     bird.coodrY -= 50;
+        // }
+        // canvas.addEventListener('click', handleClick)
+        // const myScore = new Component(cW - 200, 40, 200, 30, 'green', 'text');
+        // const restrt = new Component(cW - 100, 20, 100, 100, 'green', 'text')
+        // const bgGameOver = new Component(0,0,cW,cH,'#51494999');
+        // const textGameOver = new Component(cW/2 - 50, cH /2, 100, 40, 'red', 'text');
+        // const textPlayAgain = new Component(cW/2 - 50, cH /2+50, 100, 40, 'red', 'text');
+
+  
+        // function updateGame() {
+        //     console.log('obstacles :', obstacles);
+        //     for (let i = 0; i < obstacles.length; i += 1) {
+
+        //         if (bird.crashWith(obstacles[i])) {
+        //             console.log('object :', bird.crashWith(obstacles[i]));
+        //             clearInterval(game.interval);
+        //             bgGameOver.draw();
+        //             textGameOver.text = 'Game Over';
+        //             textPlayAgain.text = 'Play Again';
+        //             textGameOver.draw();
+        //             textPlayAgain.draw();
+                   
+        //             return;
+        //         }
+        //     }
+        //     game.clearRect();
+        //     game.time += 1;
+        //     bird.draw();
+
+        //     if (game.time == 1 || everyInterval(speedCreateObstacle)) {
+        //         let randomHeight = Math.floor(Math.random() * 200);
+        //         // console.log('randomHeight :', randomHeight);
+        //         let obstacle = new Component(cW, cH - randomHeight - defaultHeight, defaultWidth, defaultHeight +
+        //             randomHeight, 'violet');
+        //         obstacles.push(obstacle);
+        //         // console.log('obs :', obstacles);
+
+        //     }
+
+        //     let lengthOnstacle = obstacles.length;
+        //     for (let i = 0; i < lengthOnstacle; i++) {
+        //         obstacles[i].coodrX -= 1;
+        //         obstacles[i].draw();
+        //     }
+        //     if (game.time >1000){
+        //         speedCreateObstacle=50;
+        //     }
+        //     let score = `SCORE: ${game.time}`;
+        //     myScore.text = score;
+        //     myScore.draw();
+        //     bird.newPosition();
+        //     bird.draw();
+
+
+
+        // }
+
+        // function everyInterval(n) {
+        //     if (game.time / n % 1 == 0) {
+        //         return true;
+        //     } else {
+        //         return false;
+        //     }
+        // }
+        // window.onload = function () {
+        //     game.interval;
+        // }
+        // // draw rec
+    </script>
+</body>
+
+</html>
