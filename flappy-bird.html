@@ -21,76 +21,73 @@
         pipeSouth.src ='images/pipeSouth.png';
         pipeNorth.src ='images/pipeNorth.png';
         bird.src ='images/bird.png';
-        const gap = 75;
+        const gap = 60;
         let posX = 100;
         let posY = 250;
         let gravity = 1.5;
-        function Component (x, y, w, h, color){
-            this.x = x;
-            this.y = y;
-            this.width = w;
-            this.height = h;
-            this.color = color;
-        }
-        
-        Component.prototype.draw = function(){
-            context.fillStyle= this.color;
-            context.fillRect(this.x, this.y, this.width, this.height);        
-            
-        };
-       
-        function clearR (){
-            context.clearRect(0, 0, canvas.width, canvas.height);
-
-        }
-        
-        canvas.addEventListener('click',handleClick);
-        function handleClick(){
-            posY -= 25;
-        }
-        window.addEventListener('keydown',handleEvent);
-        function handleEvent(e){
-            console.log('e :', e);
-            if (e.keyCode === 32 ){
-                posY -= 25;
-            }
-        }
-        let obs = [];
+        let posYBird = 300;
+        // context.drawImage(background, 0, 0);  
         let pipe = [{
             x: canvas.width,
             y:0
         }];
-        // let randomHeight = Math.floor(Math.random()*(canvas.height-gap)/2);
-        function time (k,n){
-            if (k/n %1 ===0){
-                return true;
-            }else return false;
-        }
-       let k = 0;
+        let testX = 300
+  console.log('pipeNorth.height :', pipeNorth.height);
         function update(){
             // clearR();
-            k++
-            let randomHeight = Math.floor(Math.random()*(canvas.height-gap)/2);
-            console.log('randomHeight :', randomHeight);           
-            context.drawImage(bg, 0, 0);            
-            const piece = new Component(posX, posY, 20, 20, 'red');
-            posY+= gravity;
-            piece.draw();
-            if (time(k,180)){
-            const obstacleNorth = new Component(pipe[0].x, pipe[0].y, 50, 20+randomHeight, 'green');
-            const obstacleSouth = new Component(pipe[0].x, gap+obstacleNorth.height, 50, canvas.height-gap-obstacleNorth.height, 'green');
-            obs.push(obstacleNorth);
-            obs.push(obstacleSouth);
-            }            
             
-            for (let i = 0; i<obs.length; i++){
-                obs[i].draw();
-                obs[i].x --;
+            // console.log('randomHeight :', randomHeight);           
+            context.drawImage(bg, 0, 0);           
+            context.drawImage(bird, 100, posYBird,38,26);
+                  
+            
+            posYBird += 1.5;
+            if(posYBird <0 ){
+                posYBird =0;
             }
+            if(posYBird >canvas.height ){
+                posYBird -= 26+ 20;
+                bird.src = 'images/ca.png';    
+            }         
+            for (let i =0; i< pipe.length; i++){
+                
+                context.drawImage(pipeNorth, pipe[i].x, pipe[i].y);    
+                // console.log('object :', pipe[i].y);        
+                context.drawImage(pipeSouth, pipe[i].x, canvas.height+pipe[i].y-gap);
+                pipe[i].x --;
+                
+                if(pipe[i].x===650){
+                    pipe.push({
+                        x : canvas.width,        
+                        y :Math.floor((Math.random()*(pipeNorth.height))-pipeNorth.height)
+                    })
+                }
+                // console.log('pipe :', pipe);
+            }
+
+            
             requestAnimationFrame(update);
             
-        }        
-        update();
+            
+            
+        }    
+        
+        window.addEventListener('keydown',function(e){
+            if (e.keyCode === 32){
+                posYBird -= 30;
+                bird.src = 'images/bird.png';
+            }
+        })
+        
+        canvas.addEventListener('click',function(e){
+                posYBird -= 30;
+
+        });
+    
+        window.onload = function(){
+            update();
+
+        }  
         
 
     
