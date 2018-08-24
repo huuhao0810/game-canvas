@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
+
 <body>
     <canvas id='my-canvas' width="900" height="504"></canvas>
 
@@ -14,83 +16,127 @@
         const context = canvas.getContext('2d');
 
         const bg = new Image();
-        const pipeSouth = new Image();    
+        const pipeSouth = new Image();
         const pipeNorth = new Image();
         const bird = new Image();
-        bg.src ='images/bg.png';
-        pipeSouth.src ='images/pipeSouth.png';
-        pipeNorth.src ='images/pipeNorth.png';
-        bird.src ='images/bird.png';
-        const gap = 60;
-        let posX = 100;
-        let posY = 250;
+        bg.src = 'images/bg.png';
+        pipeSouth.src = 'images/pipeSouth.png';
+        pipeNorth.src = 'images/pipeNorth.png';
+        bird.src = 'images/bird.png';
+
+        const cvW = canvasWidth = canvas.width;
+        const cvH = canvasHeight = canvas.height;
+
+        //define position bird
+        let bX = 50;
+        let bY = canvas.height / 2;
+
+        // graviti
         let gravity = 1.5;
-        let posYBird = 300;
-        // context.drawImage(background, 0, 0);  
-        let pipe = [{
-            x: canvas.width,
-            y:0
-        }];
-        let testX = 300
-  console.log('pipeNorth.height :', pipeNorth.height);
-        function update(){
-            // clearR();
-            
-            // console.log('randomHeight :', randomHeight);           
-            context.drawImage(bg, 0, 0);           
-            context.drawImage(bird, 100, posYBird,38,26);
-                  
-            
-            posYBird += 1.5;
-            if(posYBird <0 ){
-                posYBird =0;
+
+        let gap = 85;
+        let minHeightPipe = 20;
+
+        let sum = 0;
+        let timeRenderPipe = 180;
+        // array contain pipe
+        let pipe = [];
+        // pipe[0] = new Component(pipeNorth, canvas.width, 0, 50, canvas.height / 2 - gap);
+        // pipe[1] = new Component(pipeSouth, canvas.width, canvas.height - canvas.height / 2 + gap, 50, canvas.height / 2 +
+        //     gap)
+
+        function Component(img, x, y, width, height) {
+            this.img = img;
+            this.x = x;
+            this.y = y,
+            this.width = width;
+            this.height = height;
+
+        }
+
+
+        Component.prototype.drawImg = function () {
+            context.drawImage(this.img, this.x, this.y, this.width, this.height);
+
+        }
+
+        Component.prototype.crash = function(eachPipe){
+            const birdRight = this.x + this.width;
+            const birdLeft = this.x;
+            const birdTop = this.y;
+            const birdBottom = this.y= this.height;
+            const pipeLeft = eachPipe.x;
+            const pipeRight = eachPipe.x + eachPipe.width;
+            const pipeTop = eachPipe.y;
+            const pipeBottom = eachPipe.y+ eachPipe.height;
+            let isConllision = true;
+            if (birdLeft >pipeRight || birdRight< pipeLeft || birdBottom < pipeTop || birdTop > pipeBottom){
+                isConllision = false;
+                // console.log('object');
             }
-            if(posYBird >canvas.height ){
-                posYBird -= 26+ 20;
-                bird.src = 'images/ca.png';    
-            }         
-            for (let i =0; i< pipe.length; i++){
-                
-                context.drawImage(pipeNorth, pipe[i].x, pipe[i].y);    
-                // console.log('object :', pipe[i].y);        
-                context.drawImage(pipeSouth, pipe[i].x, canvas.height+pipe[i].y-gap);
-                pipe[i].x --;
-                
-                if(pipe[i].x===650){
-                    pipe.push({
-                        x : canvas.width,        
-                        y :Math.floor((Math.random()*(pipeNorth.height))-pipeNorth.height)
-                    })
+            return isConllision;
+        }
+
+        // handle event 
+        window.addEventListener('keydown', handleEvent);
+        canvas.addEventListener('click', handleEvent);
+
+        function handleEvent(e) {
+            if (bY < 0) {
+                bY = 0;
+            }
+
+            if (e.keyCode === 32) {
+                bY -= 25;
+            } else {
+                bY -= 25;
+            }
+        }
+
+        // render pipe with time
+        function timeInterval(sum, time) {
+            if (sum / time % 1 === 0) {
+                return true;
+            } else return false;
+        }
+        
+
+        // play game
+        function update() {
+            const background = new Component(bg, 0, 0, canvas.width, canvas.height);
+            background.drawImg();
+           
+            sum++;
+           
+            
+            if (timeInterval(sum, timeRenderPipe)) {
+                const randomHeight = Math.floor(Math.random() * (cvH - gap - 50) + minHeightPipe);
+                // console.log('randomHeight :', randomHeight);
+                pipe.push(new Component(pipeNorth, canvas.width, 0, 50, randomHeight));
+                pipe.push(new Component(pipeSouth, canvas.width, randomHeight + gap, 50, canvas.height - randomHeight -
+                    gap));
+            }
+            for (let i = 0; i < pipe.length; i++) {
+                pipe[i].drawImg();
+                pipe[i].x--;
+            }
+            const birdF = new Component(bird, bX, bY, bird.width, bird.height);
+            birdF.drawImg();
+            bY += gravity;
+            for (let i = 0; i<pipe.length; i++){
+                if (birdF.crash(pipe[i])){
+                    console.log('gfdgd');
+                    return;
                 }
-                // console.log('pipe :', pipe);
+            }   
+            if (bY > cvH - birdF.height) {
+                bY = cvH - birdF.height;
             }
-
-            
+           
             requestAnimationFrame(update);
-            
-            
-            
-        }    
-        
-        window.addEventListener('keydown',function(e){
-            if (e.keyCode === 32){
-                posYBird -= 30;
-                bird.src = 'images/bird.png';
-            }
-        })
-        
-        canvas.addEventListener('click',function(e){
-                posYBird -= 30;
-
-        });
-    
-        window.onload = function(){
-            update();
-
-        }  
-        
-
-    
+        }
+        update();
     </script>
 </body>
+
 </html>
